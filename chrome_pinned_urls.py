@@ -15,12 +15,13 @@ def chrome_is_running():
 
     return True if len(chrome_processes) > 2 else False
 
-def get_preferences():
+def get_pinned_urls():
     path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
     preferences_file = open(os.path.expanduser(path))
     preferences = simplejson.load(preferences_file)
+    pinned_urls = preferences['ntp']['pinned_urls']
 
-    return preferences
+    return pinned_urls 
 
 def get_title_for_url(url):
     # TODO: Is there a better way to just fetch the title?
@@ -37,9 +38,7 @@ def get_title_for_url(url):
 
     return title
 
-def list_pinned_urls(preferences):
-    pinned_urls = preferences['ntp']['pinned_urls']
-
+def list_pinned_urls(pinned_urls):
     for k, v in pinned_urls.items():
         print v['title'], v['url']
 
