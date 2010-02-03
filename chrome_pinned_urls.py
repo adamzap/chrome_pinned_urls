@@ -37,8 +37,12 @@ def get_title_for_url(url):
 
     return title
 
-def list_pinned_urls(prefs):
+def list_pinned_urls(preferences):
+    pinned_urls = preferences['ntp']['pinned_urls']
 
+    for k, v in pinned_urls.items():
+        print v['title'], v['url']
 
 if __name__ == '__main__':
-    print chrome_is_running()
+    preferences = get_preferences()
+    list_pinned_urls(preferences)
