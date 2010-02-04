@@ -38,8 +38,8 @@ def get_title_for_url(url):
 
     return title
 
-def list_pinned_urls(pinned_urls):
-    pinned_urls = get_preferences(['ntp']['pinned_urls'])
+def list_pinned_urls():
+    pinned_urls = get_preferences()['ntp']['pinned_urls']
 
     values = pinned_urls.values()
     values.sort(key=lambda i: i['index'])
@@ -53,6 +53,9 @@ def write_preferences_file(preferences):
     out_file.close()
 
 def add_pinned_url(url):
+    # TODO check blacklist
+    # TODO check for max
+
     if chrome_is_running():
         print 'Please quit Google Chrome before adding a pinned url'
         exit()
@@ -77,4 +80,5 @@ def add_pinned_url(url):
 
 
 if __name__ == '__main__':
-    add_pinned_url('http://www.inphiltrate.com')
+    list_pinned_urls()
+    add_pinned_url('http://www.yahoo.com')
