@@ -2,7 +2,7 @@
 
 import os
 import sys
-import urllib2
+import urllib
 import hashlib
 import simplejson
 from subprocess import Popen, PIPE
@@ -48,6 +48,9 @@ def list_pinned_urls(pinned_urls):
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
 def write_preferences_file(preferences):
+    out_file = open('test_prefs', 'w')
+    simplejson.dump(preferences, out_file, indent=3)
+    out_file.close()
 
 def add_pinned_url(url):
     if chrome_is_running():
@@ -56,11 +59,11 @@ def add_pinned_url(url):
 
     preferences = get_preferences()
 
-    pinned_urls = get_preferences(['ntp']['pinned_urls'])
+    pinned_urls = preferences['ntp']['pinned_urls']
 
     key = hashlib.md5(url).hexdigest()
     taken_indices = [i['index'] for i in pinned_urls.values()]
-    the_index = [x for x in [y for y in range(8)] if x not in taken_indices]
+    the_index = [x for x in [y for y in range(8)] if x not in taken_indices][0]
 
     pinned_url = {}
     pinned_url['title'] = get_title_for_url(url)
@@ -74,3 +77,4 @@ def add_pinned_url(url):
 
 
 if __name__ == '__main__':
+    add_pinned_url('http://www.inphiltrate.com')
