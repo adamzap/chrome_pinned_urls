@@ -39,9 +39,12 @@ def get_title_for_url(url):
     return title
 
 def list_pinned_urls(pinned_urls):
-    for k, v in pinned_urls.items():
-        print v['title'], v['url']
+    values = pinned_urls.values()
+    values.sort(key=lambda i: i['index'])
+
+    for i in values:
+        print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
 if __name__ == '__main__':
-    preferences = get_preferences()
-    list_pinned_urls(preferences)
+    pinned_urls = get_pinned_urls()
+    list_pinned_urls(pinned_urls)
