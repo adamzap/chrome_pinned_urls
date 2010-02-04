@@ -3,6 +3,7 @@
 import os
 import sys
 import urllib2
+import hashlib
 import simplejson
 from subprocess import Popen, PIPE
 
@@ -15,13 +16,12 @@ def chrome_is_running():
 
     return True if len(chrome_processes) > 2 else False
 
-def get_pinned_urls():
+def get_preferences():
     path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
     preferences_file = open(os.path.expanduser(path))
     preferences = simplejson.load(preferences_file)
-    pinned_urls = preferences['ntp']['pinned_urls']
 
-    return pinned_urls 
+    return preferences 
 
 def get_title_for_url(url):
     # TODO: Is there a better way to just fetch the title?
@@ -39,12 +39,38 @@ def get_title_for_url(url):
     return title
 
 def list_pinned_urls(pinned_urls):
+    pinned_urls = get_preferences(['ntp']['pinned_urls'])
+
     values = pinned_urls.values()
     values.sort(key=lambda i: i['index'])
 
     for i in values:
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
+def write_preferences_file(preferences):
+
+def add_pinned_url(url):
+    if chrome_is_running():
+        print 'Please quit Google Chrome before adding a pinned url'
+        exit()
+
+    preferences = get_preferences()
+
+    pinned_urls = get_preferences(['ntp']['pinned_urls'])
+
+    key = hashlib.md5(url).hexdigest()
+    taken_indices = [i['index'] for i in pinned_urls.values()]
+    the_index = [x for x in [y for y in range(8)] if x not in taken_indices]
+
+    pinned_url = {}
+    pinned_url['title'] = get_title_for_url(url)
+    pinned_url['url'] = url
+    pinned_url['direction'] = 'ltr'
+    pinned_url['index'] = the_index
+
+    preferences['ntp']['pinned_urls'][key] = pinned_url
+
+    write_preferences_file(preferences)
+
+
 if __name__ == '__main__':
-    pinned_urls = get_pinned_urls()
-    list_pinned_urls(pinned_urls)
