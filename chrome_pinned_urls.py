@@ -28,7 +28,7 @@ def get_title_for_url(url):
     try:
         page = urllib.urlopen(url).read()
     except IOError:
-        print 'Not a good url?'
+        print 'Not a good url? Aborting.'
         exit()
 
     try:
@@ -49,7 +49,7 @@ def list_pinned_urls():
 
 def write_preferences_file(preferences):
     out_file = open('test_prefs', 'w')
-    simplejson.dump(preferences, out_file, indent=3)
+    simplejson.dump(preferences, out_file, indent=3, sort_keys=True)
     out_file.close()
 
 def add_pinned_url(url):
@@ -57,7 +57,7 @@ def add_pinned_url(url):
     # TODO check for max
 
     if chrome_is_running():
-        print 'Please quit Google Chrome before adding a pinned url'
+        print 'Please quit Google Chrome before adding a pinned url. Aborting.'
         exit()
 
     preferences = get_preferences()
@@ -65,6 +65,11 @@ def add_pinned_url(url):
     pinned_urls = preferences['ntp']['pinned_urls']
 
     key = hashlib.md5(url).hexdigest()
+
+    if key in pinned_urls.keys():
+        print 'That url is already pinned. Aborting.'
+        exit()
+
     taken_indices = [i['index'] for i in pinned_urls.values()]
     the_index = [x for x in [y for y in range(8)] if x not in taken_indices][0]
 
@@ -80,5 +85,6 @@ def add_pinned_url(url):
 
 
 if __name__ == '__main__':
-    list_pinned_urls()
-    add_pinned_url('http://www.yahoo.com')
+    #list_pinned_urls()
+    #add_pinned_url('http://news.ycombinator.com/')
+    add_pinned_url('http://www.newegg.com/')
