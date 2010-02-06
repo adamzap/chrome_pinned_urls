@@ -44,6 +44,10 @@ def list_pinned_urls():
     values = pinned_urls.values()
     values.sort(key=lambda i: i['index'])
 
+    if not values:
+        print 'No urls are pinned'
+        return
+
     for i in values:
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
