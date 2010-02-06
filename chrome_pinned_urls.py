@@ -29,7 +29,7 @@ def get_title_for_url(url):
         page = urllib.urlopen(url).read()
     except IOError:
         print 'Not a good url? Aborting.'
-        exit()
+        sys.exit()
 
     try:
         title = page.split('<title>')[1].split('</title>')[0]
@@ -55,7 +55,7 @@ def write_preferences_file(preferences):
 def add_pinned_url(url):
     if chrome_is_running():
         print 'Please quit Google Chrome before adding a pinned url. Aborting.'
-        exit()
+        sys.exit()
 
     preferences = get_preferences()
 
@@ -63,13 +63,13 @@ def add_pinned_url(url):
 
     if len(pinned_urls) > 7:
         print 'Too many pinned urls to add one. Please unpin a url. Aborting.'
-        exit()
+        sys.exit()
 
     key = hashlib.md5(url).hexdigest()
 
     if key in pinned_urls.keys():
         print 'That url is already pinned. Aborting.'
-        exit()
+        sys.exit()
 
     # I don't think this is necessary, but it seems like a good idea
     if key in preferences['ntp']['most_visited_blacklist'].keys():
@@ -109,4 +109,4 @@ if __name__ == '__main__':
 
     if opts.do_list:
         list_pinned_urls()
-        exit()
+        sys.exit()
