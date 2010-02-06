@@ -73,6 +73,11 @@ def add_pinned_url(url):
         print 'That url is already pinned. Aborting.'
         exit()
 
+    # I don't think this is necessary, but it seems like a good idea
+    if key in preferences['ntp']['most_visited_blacklist'].keys():
+        print 'Removing url from most visited blacklist...'
+        del preferences['ntp']['most_visited_blacklist'][key]
+
     taken_indices = [i['index'] for i in pinned_urls.values()]
     the_index = [x for x in [y for y in range(8)] if x not in taken_indices][0]
 
