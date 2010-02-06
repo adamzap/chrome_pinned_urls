@@ -95,7 +95,18 @@ def add_pinned_url(url):
 
 
 if __name__ == '__main__':
+    import optparse
     # TODO multimple cmd line args to add?
-    #list_pinned_urls()
-    #add_pinned_url('http://news.ycombinator.com/')
-    add_pinned_url('http://www.newegg.com/')
+
+    parser = optparse.OptionParser()
+
+    parser.set_usage('%prog [-l] [url1 url2 ...]')
+    parser.set_description('Python script to manipulate Chrome\'s pinned urls')
+    parser.add_option('-l', '--list', dest='do_list', action='store_true',
+                      help='List current pinned urls with their indices and exit')
+
+    opts, args = parser.parse_args()
+
+    if opts.do_list:
+        list_pinned_urls()
+        exit()
