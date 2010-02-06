@@ -57,10 +57,6 @@ def write_preferences_file(preferences):
     out_file.close()
 
 def add_pinned_url(url):
-    if chrome_is_running():
-        print 'Please quit Google Chrome before adding a pinned url. Aborting.'
-        sys.exit()
-
     preferences = get_preferences()
 
     pinned_urls = preferences['ntp']['pinned_urls']
@@ -110,6 +106,14 @@ if __name__ == '__main__':
                       help='List current pinned urls with their indices and exit')
 
     opts, args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit()
+    else:
+        if chrome_is_running():
+            print 'Please quit Google Chrome before using this script. Aborting.'
+            sys.exit()
 
     if opts.do_list:
         list_pinned_urls()
