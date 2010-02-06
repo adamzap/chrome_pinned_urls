@@ -110,10 +110,10 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit()
-    else:
-        if chrome_is_running():
-            print 'Please quit Google Chrome before using this script. Aborting.'
-            sys.exit()
+
+    if chrome_is_running():
+        print 'Please quit Google Chrome before using this script. Aborting.'
+        sys.exit()
 
     if opts.do_list:
         list_pinned_urls()
