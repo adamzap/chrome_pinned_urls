@@ -53,8 +53,6 @@ def write_preferences_file(preferences):
     out_file.close()
 
 def add_pinned_url(url):
-    # TODO check blacklist
-
     if chrome_is_running():
         print 'Please quit Google Chrome before adding a pinned url. Aborting.'
         exit()
@@ -89,10 +87,15 @@ def add_pinned_url(url):
 
     preferences['ntp']['pinned_urls'][key] = pinned_url
 
+    print 'Successfully added %s at index %s' % (url, the_index)
+
     write_preferences_file(preferences)
+
+    print 'Successfully wrote Chrome Preferences file. Done.'
 
 
 if __name__ == '__main__':
+    # TODO multimple cmd line args to add?
     #list_pinned_urls()
     #add_pinned_url('http://news.ycombinator.com/')
     add_pinned_url('http://www.newegg.com/')
