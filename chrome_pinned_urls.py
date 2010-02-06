@@ -53,7 +53,8 @@ def list_pinned_urls():
 
 def write_preferences_file(preferences):
     out_file = open('test_prefs', 'w')
-    simplejson.dump(preferences, out_file, indent=3, sort_keys=True)
+    simplejson.dump(preferences, out_file, indent=3, sort_keys=True,
+                    separators=(',', ': '))
     out_file.close()
 
 def add_pinned_url(url):
@@ -106,7 +107,7 @@ if __name__ == '__main__':
                       help='List current pinned urls with their indices and exit')
 
     opts, args = parser.parse_args()
-
+    
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit()
@@ -118,3 +119,6 @@ if __name__ == '__main__':
     if opts.do_list:
         list_pinned_urls()
         sys.exit()
+
+    for arg in args:
+        add_pinned_url(arg)
