@@ -54,7 +54,6 @@ def write_preferences_file(preferences):
 
 def add_pinned_url(url):
     # TODO check blacklist
-    # TODO check for max
 
     if chrome_is_running():
         print 'Please quit Google Chrome before adding a pinned url. Aborting.'
@@ -63,6 +62,10 @@ def add_pinned_url(url):
     preferences = get_preferences()
 
     pinned_urls = preferences['ntp']['pinned_urls']
+
+    if len(pinned_urls) > 7:
+        print 'Too many pinned urls to add one. Please unpin a url. Aborting.'
+        exit()
 
     key = hashlib.md5(url).hexdigest()
 
