@@ -4,6 +4,7 @@ import os
 import sys
 import urllib
 import hashlib
+import urlparse
 import simplejson
 from subprocess import Popen, PIPE
 
@@ -58,6 +59,10 @@ def write_preferences_file(preferences):
     out_file.close()
 
 def add_pinned_url(url):
+    # Things don't work if there's no trailing slash and no path
+    if urlparse.urlparse(url).path == '' and url[-1] != '/':
+        url += '/'
+
     preferences = get_preferences()
 
     pinned_urls = preferences['ntp']['pinned_urls']
