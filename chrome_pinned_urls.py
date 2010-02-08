@@ -53,7 +53,8 @@ def list_pinned_urls(preferences):
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
 def write_preferences_file(preferences):
-    out_file = open('test_prefs', 'w')
+    path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
+    out_file = open(os.path.expanduser(path), 'w')
     simplejson.dump(preferences, out_file, indent=3, sort_keys=True,
                     separators=(',', ': '))
     out_file.close()
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     preferences = get_preferences()
 
     if opts.do_list:
-        list_pinned_urls()
+        list_pinned_urls(preferences)
         sys.exit()
 
     for arg in args:
