@@ -29,7 +29,7 @@ def get_title_for_url(url):
     try:
         page = urllib.urlopen(url).read()
     except IOError:
-        print 'Not a good url? Aborting.'
+        print '%s is not a well-formed url. Aborting.' % url
         sys.exit()
 
     try:
@@ -39,8 +39,8 @@ def get_title_for_url(url):
 
     return title
 
-def list_pinned_urls():
-    pinned_urls = get_preferences()['ntp']['pinned_urls']
+def list_pinned_urls(preferences):
+    pinned_urls = preferences['ntp']['pinned_urls']
 
     values = pinned_urls.values()
     values.sort(key=lambda i: i['index'])
@@ -58,24 +58,24 @@ def write_preferences_file(preferences):
                     separators=(',', ': '))
     out_file.close()
 
-def add_pinned_url(url):
+    print 'Successfully wrote Chrome Preferences file. Done.'
+
+def add_pinned_url(url, preferences):
     # Things don't work if there's no trailing slash and no path
     if urlparse.urlparse(url).path == '' and url[-1] != '/':
         url += '/'
 
-    preferences = get_preferences()
-
     pinned_urls = preferences['ntp']['pinned_urls']
 
     if len(pinned_urls) > 7:
-        print 'Too many pinned urls to add one. Please unpin a url. Aborting.'
+        print 'Too many pinned urls to. Please unpin a url. Aborting.'
         sys.exit()
 
     key = hashlib.md5(url).hexdigest()
 
     if key in pinned_urls.keys():
-        print 'That url is already pinned. Aborting.'
-        sys.exit()
+        print '%s is already pinned. Skipping.' % url
+        return preferences
 
     # I don't think this is necessary, but it seems like a good idea
     if key in preferences['ntp']['most_visited_blacklist'].keys():
@@ -95,14 +95,11 @@ def add_pinned_url(url):
 
     print 'Successfully added %s at index %s' % (url, the_index)
 
-    write_preferences_file(preferences)
-
-    print 'Successfully wrote Chrome Preferences file. Done.'
+    return preferences
 
 
 if __name__ == '__main__':
     import optparse
-    # TODO multimple cmd line args to add?
 
     parser = optparse.OptionParser()
 
@@ -121,9 +118,13 @@ if __name__ == '__main__':
         print 'Please quit Google Chrome before using this script. Aborting.'
         sys.exit()
 
+    preferences = get_preferences()
+
     if opts.do_list:
         list_pinned_urls()
         sys.exit()
 
     for arg in args:
-        add_pinned_url(arg)
+        add_pinned_url(arg, preferences)
+
+    write_preferences_file(preferences)
