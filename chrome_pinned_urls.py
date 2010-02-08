@@ -8,21 +8,34 @@ import urlparse
 import simplejson
 from subprocess import Popen, PIPE
 
+MAC_PATH = '~/Library/Application Support/Google/Chrome/Default/Preferences'
+LIN_PATH = '~/.config/google-chrome/Default/Preferences'
+
+def get_os_path():
+    if sys.platform == 'darwin':
+        path = MAC_PATH
+    elif sys.platform == 'linux2':
+        path = LIN_PATH
+    else:
+        print 'Sorry, only OS X and Linux are supported at this time'
+        sys.exit()
+
+    return path
+
 def chrome_is_running():
-    # ps awx | grep Chrome | wc -l
+    # ps awx | grep -i 'google[- ]chrome | wc -l
+    # This call to grep work on Mac and Linux
+    reg = 'google[- ]chrome'
+
     ps_proc = Popen(['ps', 'awx'], stdout=PIPE)
-    grep_proc = Popen(['grep', 'Chrome'], stdin=ps_proc.stdout, stdout=PIPE)
+    grep_proc = Popen(['grep', '-i', reg], stdin=ps_proc.stdout, stdout=PIPE)
 
     chrome_processes = grep_proc.communicate()[0].split('\n')
 
     return True if len(chrome_processes) > 2 else False
 
 def get_preferences():
-    if sys.platform == 'darwin':
-        path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
-    else:
-        print 'Sorry, only OS X is supported at this time'
-        sys.exit()
+    path = get_os_path()
 
     preferences_file = open(os.path.expanduser(path))
     preferences = simplejson.load(preferences_file)
@@ -58,7 +71,7 @@ def list_pinned_urls(preferences):
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
 
 def write_preferences_file(preferences):
-    path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
+    path = get_os_path()
     out_file = open(os.path.expanduser(path), 'w')
     simplejson.dump(preferences, out_file, indent=3, sort_keys=True,
                     separators=(',', ': '))
