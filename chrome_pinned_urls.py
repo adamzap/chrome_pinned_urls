@@ -18,7 +18,12 @@ def chrome_is_running():
     return True if len(chrome_processes) > 2 else False
 
 def get_preferences():
-    path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
+    if sys.platform == 'darwin':
+        path = '~/Library/Application Support/Google/Chrome/Default/Preferences'
+    else:
+        print 'Sorry, only OS X is supported at this time'
+        sys.exit()
+
     preferences_file = open(os.path.expanduser(path))
     preferences = simplejson.load(preferences_file)
 
