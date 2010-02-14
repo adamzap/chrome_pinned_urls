@@ -1,0 +1,9 @@
+Usage: chrome_pinned_urls.py [-l] [url1 url2 ...]
+
+Python script to manipulate Chrome's pinned urls
+
+Each url will be added at the first open index on your Chrome new tab page.
+
+Options:
+  -h, --help  show this help message and exit
+  -l, --list  List current pinned urls with their indices and exit
