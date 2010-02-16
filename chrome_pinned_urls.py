@@ -40,7 +40,7 @@ def get_preferences():
     preferences_file = open(os.path.expanduser(path))
     preferences = simplejson.load(preferences_file)
 
-    return preferences 
+    return preferences
 
 def get_title_for_url(url):
     # TODO: Is there a better way to just fetch the title?
@@ -58,14 +58,12 @@ def get_title_for_url(url):
     return title
 
 def list_pinned_urls(preferences):
-    pinned_urls = preferences['ntp']['pinned_urls']
-
-    values = pinned_urls.values()
-    values.sort(key=lambda i: i['index'])
-
-    if not values:
+    if not preferences['ntp'].has_key('pinned_urls'):
         print 'No urls are pinned'
         return
+
+    values = preferences['ntp']['pinned_urls'].values()
+    values.sort(key=lambda i: i['index'])
 
     for i in values:
         print '%d - %s (%s)' % (i['index'] + 1, i['url'], i['title'])
@@ -83,6 +81,9 @@ def add_pinned_url(url, preferences):
     # Things don't work if there's no trailing slash and no path
     if urlparse.urlparse(url).path == '' and url[-1] != '/':
         url += '/'
+
+    if not preferences['ntp'].has_key('pinned_urls'):
+        preferences['ntp']['pinned_urls'] = {}
 
     pinned_urls = preferences['ntp']['pinned_urls']
 
