@@ -24,7 +24,6 @@ def get_os_path():
 
 def chrome_is_running():
     # ps awx | grep -i 'google[- ]chrome | wc -l
-    # This call to grep work on Mac and Linux
     reg = 'google[- ]chrome'
 
     ps_proc = Popen(['ps', 'awx'], stdout=PIPE)
