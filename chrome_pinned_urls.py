@@ -112,7 +112,7 @@ def add_pinned_url(url, preferences):
 
     preferences['ntp']['pinned_urls'][key] = pinned_url
 
-    print 'Successfully added %s at index %s' % (url, the_index)
+    print 'Successfully added %s at index %s' % (url, the_index + 1)
 
     return preferences
 
